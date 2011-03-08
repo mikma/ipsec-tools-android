@@ -28,7 +28,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 34
+#define YY_FLEX_SUBMINOR_VERSION 35
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -73,7 +73,6 @@ typedef int flex_int32_t;
 typedef unsigned char flex_uint8_t; 
 typedef unsigned short int flex_uint16_t;
 typedef unsigned int flex_uint32_t;
-#endif /* ! C99 */
 
 /* Limits of integral types. */
 #ifndef INT8_MIN
@@ -103,6 +102,8 @@ typedef unsigned int flex_uint32_t;
 #ifndef UINT32_MAX
 #define UINT32_MAX             (4294967295U)
 #endif
+
+#endif /* ! C99 */
 
 #endif /* ! FLEXINT_H */
 
@@ -160,7 +161,15 @@ typedef unsigned int flex_uint32_t;
 
 /* Size of default input buffer. */
 #ifndef YY_BUF_SIZE
+#ifdef __ia64__
+/* On IA-64, the buffer size is 16k, not 8k.
+ * Moreover, YY_BUF_SIZE is 2*YY_READ_BUF_SIZE in the general case.
+ * Ditto for the __ia64__ case accordingly.
+ */
+#define YY_BUF_SIZE 32768
+#else
 #define YY_BUF_SIZE 16384
+#endif /* __ia64__ */
 #endif
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
@@ -197,13 +206,6 @@ extern FILE *prsain, *prsaout;
 	while ( 0 )
 
 #define unput(c) yyunput( c, (yytext_ptr)  )
-
-/* The following is because we cannot portably get our hands on size_t
- * (without autoconf's help, which isn't available because we want
- * flex-generated scanners to compile on their own).
- * Given that the standard has decreed that size_t exists since 1989,
- * I guess we can afford to depend on it. Manoj.
- */
 
 #ifndef YY_TYPEDEF_YY_SIZE_T
 #define YY_TYPEDEF_YY_SIZE_T
@@ -744,7 +746,7 @@ char *prsatext;
 extern int prsalex (void);
 extern int prsa_cur_lineno;
 
-#line 748 "prsa_tok.c"
+#line 750 "prsa_tok.c"
 
 #define INITIAL 0
 
@@ -761,6 +763,35 @@ extern int prsa_cur_lineno;
 #endif
 
 static int yy_init_globals (void );
+
+/* Accessor methods to globals.
+   These are made visible to non-reentrant scanners for convenience. */
+
+int prsalex_destroy (void );
+
+int prsaget_debug (void );
+
+void prsaset_debug (int debug_flag  );
+
+YY_EXTRA_TYPE prsaget_extra (void );
+
+void prsaset_extra (YY_EXTRA_TYPE user_defined  );
+
+FILE *prsaget_in (void );
+
+void prsaset_in  (FILE * in_str  );
+
+FILE *prsaget_out (void );
+
+void prsaset_out  (FILE * out_str  );
+
+int prsaget_leng (void );
+
+char *prsaget_text (void );
+
+int prsaget_lineno (void );
+
+void prsaset_lineno (int line_number  );
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -796,7 +827,12 @@ static int input (void );
 
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
+#ifdef __ia64__
+/* On IA-64, the buffer size is 16k, not 8k */
+#define YY_READ_BUF_SIZE 16384
+#else
 #define YY_READ_BUF_SIZE 8192
+#endif /* __ia64__ */
 #endif
 
 /* Copy whatever the last rule matched to the standard output. */
@@ -804,7 +840,7 @@ static int input (void );
 /* This used to be an fputs(), but since the string might contain NUL's,
  * we now use fwrite().
  */
-#define ECHO fwrite( prsatext, prsaleng, 1, prsaout )
+#define ECHO do { if (fwrite( prsatext, prsaleng, 1, prsaout )) {} } while (0)
 #endif
 
 /* Gets input and stuffs it into "buf".  number of characters read, or YY_NULL,
@@ -815,7 +851,7 @@ static int input (void );
 	if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \
 		{ \
 		int c = '*'; \
-		int n; \
+		size_t n; \
 		for ( n = 0; n < max_size && \
 			     (c = getc( prsain )) != EOF && c != '\n'; ++n ) \
 			buf[n] = (char) c; \
@@ -899,7 +935,7 @@ YY_DECL
     
 #line 56 "prsa_tok.l"
 
-#line 903 "prsa_tok.c"
+#line 939 "prsa_tok.c"
 
 	if ( !(yy_init) )
 		{
@@ -1116,7 +1152,7 @@ YY_RULE_SETUP
 #line 89 "prsa_tok.l"
 ECHO;
 	YY_BREAK
-#line 1120 "prsa_tok.c"
+#line 1156 "prsa_tok.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1874,8 +1910,8 @@ YY_BUFFER_STATE prsa_scan_string (yyconst char * yystr )
 
 /** Setup the input buffer state to scan the given bytes. The next call to prsalex() will
  * scan from a @e copy of @a bytes.
- * @param bytes the byte buffer to scan
- * @param len the number of bytes in the buffer pointed to by @a bytes.
+ * @param yybytes the byte buffer to scan
+ * @param _yybytes_len the number of bytes in the buffer pointed to by @a bytes.
  * 
  * @return the newly allocated buffer state object.
  */
