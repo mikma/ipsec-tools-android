@@ -791,7 +791,7 @@ upper_spec
 					return -1;
 				}
 			}
-			endprotoent();
+			/* endprotoent(); */
 		}
 	;
 

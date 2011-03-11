@@ -40,7 +40,11 @@
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/stat.h>
+#ifndef ANDROID_CHANGES
 #include <sys/sysctl.h>
+#else
+#include "error.h"
+#endif
 #include <err.h>
 #include <netinet/in.h>
 #include <net/pfkeyv2.h>

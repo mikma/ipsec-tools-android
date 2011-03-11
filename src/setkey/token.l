@@ -88,6 +88,8 @@
 #endif
 %}
 
+%option noyywrap
+
 /* common section */
 nl		\n
 ws		[ \t]+
