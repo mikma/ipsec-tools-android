@@ -60,8 +60,7 @@ LOCAL_SRC_FILES := \
 	src/racoon/localconf.c \
 	src/racoon/safefile.c \
 	src/racoon/session.c \
-	src/racoon/privsep.c \
-	setup.c
+	src/racoon/privsep.c
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH) \
