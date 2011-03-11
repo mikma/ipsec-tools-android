@@ -120,9 +120,6 @@ static void *policy_parse __P((const char *, int));
 extern void __policy__strbuffer__init__ __P((const char *));
 extern void __policy__strbuffer__free__ __P((void));
 extern int yyparse __P((void));
-extern int yylex __P((void));
-
-extern char *__libipsectext;	/*XXX*/
 
 %}
 
@@ -135,6 +132,8 @@ extern char *__libipsectext;	/*XXX*/
 	} val;
 }
 
+%define api.pure
+%define noyywrap
 %token DIR 
 %token PRIORITY PLUS
 %token <num32> PRIO_BASE 
@@ -365,8 +364,8 @@ void
 yyerror(msg)
 	char *msg;
 {
-	fprintf(stderr, "libipsec: %s while parsing \"%s\"\n",
-		msg, __libipsectext);
+	fprintf(stderr, "libipsec: %s while parsing\n",
+		msg);
 
 	return;
 }

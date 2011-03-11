@@ -57,13 +57,12 @@
 #else
 #include "policy_parse.h"
 #endif
-#define yylval __libipseclval	/* XXX */
 
-int yylex __P((void));
 %}
 
 %option noyywrap
 %option nounput
+%option bison-bridge
 
 /* common section */
 nl		\n
@@ -96,58 +95,58 @@ ipaddress	[a-zA-Z0-9:\._][a-zA-Z0-9:\._]*(%[a-zA-Z0-9]+)?
 
 %%
 
-in		{ yylval.num = IPSEC_DIR_INBOUND; return(DIR); }
-out		{ yylval.num = IPSEC_DIR_OUTBOUND; return(DIR); }
+in		{ yylval->num = IPSEC_DIR_INBOUND; return(DIR); }
+out		{ yylval->num = IPSEC_DIR_OUTBOUND; return(DIR); }
 fwd		{ 
 #ifdef HAVE_POLICY_FWD
-		  yylval.num = IPSEC_DIR_FWD; return(DIR); 
+		  yylval->num = IPSEC_DIR_FWD; return(DIR); 
 #else
-		  yylval.num = IPSEC_DIR_INBOUND; return(DIR); 
+		  yylval->num = IPSEC_DIR_INBOUND; return(DIR); 
 #endif
 		}
 
 priority	{ return(PRIORITY); }
 prio	{ return(PRIORITY); }
-low	{ yylval.num32 = PRIORITY_LOW; return(PRIO_BASE); }
-def { yylval.num32 = PRIORITY_DEFAULT; return(PRIO_BASE); }
-high	{ yylval.num32 = PRIORITY_HIGH; return(PRIO_BASE); }
+low	{ yylval->num32 = PRIORITY_LOW; return(PRIO_BASE); }
+def { yylval->num32 = PRIORITY_DEFAULT; return(PRIO_BASE); }
+high	{ yylval->num32 = PRIORITY_HIGH; return(PRIO_BASE); }
 {plus}	{ return(PLUS); }
 {decstring}	{
-			yylval.val.len = strlen(yytext);
-			yylval.val.buf = yytext;
+			yylval->val.len = strlen(yytext);
+			yylval->val.buf = yytext;
 			return(PRIO_OFFSET);
 }
 
-discard		{ yylval.num = IPSEC_POLICY_DISCARD; return(ACTION); }
-none		{ yylval.num = IPSEC_POLICY_NONE; return(ACTION); }
-ipsec		{ yylval.num = IPSEC_POLICY_IPSEC; return(ACTION); }
-bypass		{ yylval.num = IPSEC_POLICY_BYPASS; return(ACTION); }
-entrust		{ yylval.num = IPSEC_POLICY_ENTRUST; return(ACTION); }
+discard		{ yylval->num = IPSEC_POLICY_DISCARD; return(ACTION); }
+none		{ yylval->num = IPSEC_POLICY_NONE; return(ACTION); }
+ipsec		{ yylval->num = IPSEC_POLICY_IPSEC; return(ACTION); }
+bypass		{ yylval->num = IPSEC_POLICY_BYPASS; return(ACTION); }
+entrust		{ yylval->num = IPSEC_POLICY_ENTRUST; return(ACTION); }
 
-esp		{ yylval.num = IPPROTO_ESP; return(PROTOCOL); }
-ah		{ yylval.num = IPPROTO_AH; return(PROTOCOL); }
-ipcomp		{ yylval.num = IPPROTO_IPCOMP; return(PROTOCOL); }
+esp		{ yylval->num = IPPROTO_ESP; return(PROTOCOL); }
+ah		{ yylval->num = IPPROTO_AH; return(PROTOCOL); }
+ipcomp		{ yylval->num = IPPROTO_IPCOMP; return(PROTOCOL); }
 
-transport	{ yylval.num = IPSEC_MODE_TRANSPORT; return(MODE); }
-tunnel		{ yylval.num = IPSEC_MODE_TUNNEL; return(MODE); }
+transport	{ yylval->num = IPSEC_MODE_TRANSPORT; return(MODE); }
+tunnel		{ yylval->num = IPSEC_MODE_TUNNEL; return(MODE); }
 
 me		{ return(ME); }
 any		{ return(ANY); }
 
-default		{ yylval.num = IPSEC_LEVEL_DEFAULT; return(LEVEL); }
-use		{ yylval.num = IPSEC_LEVEL_USE; return(LEVEL); }
-require		{ yylval.num = IPSEC_LEVEL_REQUIRE; return(LEVEL); }
+default		{ yylval->num = IPSEC_LEVEL_DEFAULT; return(LEVEL); }
+use		{ yylval->num = IPSEC_LEVEL_USE; return(LEVEL); }
+require		{ yylval->num = IPSEC_LEVEL_REQUIRE; return(LEVEL); }
 unique{colon}{decstring} {
-			yylval.val.len = strlen(yytext + 7);
-			yylval.val.buf = yytext + 7;
+			yylval->val.len = strlen(yytext + 7);
+			yylval->val.buf = yytext + 7;
 			return(LEVEL_SPECIFY);
 		}
-unique		{ yylval.num = IPSEC_LEVEL_UNIQUE; return(LEVEL); }
+unique		{ yylval->num = IPSEC_LEVEL_UNIQUE; return(LEVEL); }
 {slash}		{ return(SLASH); }
 
 {ipaddress}	{
-			yylval.val.len = strlen(yytext);
-			yylval.val.buf = yytext;
+			yylval->val.len = strlen(yytext);
+			yylval->val.buf = yytext;
 			return(IPADDRESS);
 		}
 
@@ -155,8 +154,8 @@ unique		{ yylval.num = IPSEC_LEVEL_UNIQUE; return(LEVEL); }
 
 {blcl}{decstring}{elcl} {
 			/* Remove leading '[' and trailing ']' */
-			yylval.val.buf = yytext + 1;
-			yylval.val.len = strlen(yytext) - 2;
+			yylval->val.buf = yytext + 1;
+			yylval->val.len = strlen(yytext) - 2;
 
 			return(PORT);
 		}

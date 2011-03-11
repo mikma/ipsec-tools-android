@@ -754,7 +754,7 @@ str_upperspec(ulp, p1, p2)
 			else
 				printf("%u", ulp);
 
-			endprotoent();
+			/* endprotoent(); */
 			break;
 		}
 	}
