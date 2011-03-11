@@ -20,8 +20,6 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
-	src/libipsec/pfkey.c \
-	src/libipsec/ipsec_strerror.c \
 	src/racoon/isakmp.c \
 	src/racoon/isakmp_agg.c \
 	src/racoon/isakmp_base.c \
@@ -46,8 +44,25 @@ LOCAL_SRC_FILES := \
 	src/racoon/vmbuf.c \
 	src/racoon/sockmisc.c \
 	src/racoon/nattraversal.c \
-	main.c \
-	setup.c
+	src/racoon/cfparse.c \
+	src/racoon/cftoken.c \
+	src/racoon/grabmyaddr.c \
+	src/racoon/remoteconf.c \
+	src/racoon/sainfo.c \
+	src/racoon/rsalist.c \
+	src/racoon/prsa_tok.c \
+	src/racoon/prsa_par.c \
+	src/racoon/misc.c \
+	src/racoon/plog.c \
+	src/racoon/logger.c \
+	src/racoon/main.c \
+	src/racoon/backupsa.c \
+	src/racoon/localconf.c \
+	src/racoon/safefile.c \
+	src/racoon/session.c \
+	src/racoon/privsep.c \
+	setup.c \
+	glob.c
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH) \
@@ -55,15 +70,20 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/src/libipsec \
 	$(LOCAL_PATH)/src/racoon \
 	$(LOCAL_PATH)/src/racoon/missing \
-	external/openssl/include \
-	frameworks/base/cmds/keystore
+	$(OPENSSL_INC)
 
-LOCAL_SHARED_LIBRARIES := libcutils libcrypto
+LOCAL_SHARED_LIBRARIES := libcutils libcrypto libipsec
 
-LOCAL_CFLAGS := -DANDROID_CHANGES -DHAVE_CONFIG_H
+LOCAL_CFLAGS := -DANDROID_CHANGES -DHAVE_CONFIG_H -DSYSCONFDIR='"/data/local"'
+
+LOCAL_LDFLAGS := -L$(OPENSSL_LIB)
+LOCAL_LDLIBS := -lssl -lcrypto
 
 LOCAL_MODULE := racoon
 
 include $(BUILD_EXECUTABLE)
 
 endif
+
+include src/libipsec/Android.mk
+include src/setkey/Android.mk

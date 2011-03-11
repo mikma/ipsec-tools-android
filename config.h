@@ -22,3 +22,8 @@
 #define HAVE_UNISTD_H
 
 #define ANDROID_PATCHED
+
+#define HAVE_STDARG_H
+#define RETSIGTYPE void
+#define strtouq strtoul
+#define MAXNS 3
