@@ -2,3 +2,7 @@ libs/
 obj/
 policy_parse.c
 policy_token.c
+cfparse.c
+cftoken.c
+prsa_par.c
+prsa_tok.c
