@@ -9,7 +9,8 @@ LOCAL_SRC_FILES := \
 	pfkey.c \
 	pfkey_dump.c \
 	policy_parse.c \
-	policy_token.c
+	policy_token.c \
+	error.c
 
 LOCAL_C_INCLUDES += \
 	$(NDK_PROJECT_PATH) \
