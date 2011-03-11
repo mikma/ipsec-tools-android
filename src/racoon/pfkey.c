@@ -59,7 +59,9 @@
 #include <sys/param.h>
 #include <sys/socket.h>
 #include <sys/queue.h>
+#ifndef ANDROID_CHANGES
 #include <sys/sysctl.h>
+#endif
 
 #include <net/route.h>
 #include <net/pfkeyv2.h>
@@ -1133,6 +1135,7 @@ pk_sendupdate(iph2)
 			return -1;
 		}
 
+#ifndef ANDROID_PATCHED
 		if (!lcconf->pathinfo[LC_PATHTYPE_BACKUPSA])
 			continue;
 
@@ -1157,6 +1160,7 @@ pk_sendupdate(iph2)
 			"backuped SA: %s\n",
 			sadbsecas2str(sa_args.src, sa_args.dst,
 			sa_args.satype, sa_args.spi, sa_args.mode));
+#endif
 	}
 
 	return 0;
@@ -1427,6 +1431,7 @@ pk_sendadd(iph2)
 			return -1;
 		}
 
+#ifndef ANDROID_PATCHED
 		if (!lcconf->pathinfo[LC_PATHTYPE_BACKUPSA])
 			continue;
 
@@ -1446,6 +1451,7 @@ pk_sendadd(iph2)
 			"backuped SA: %s\n",
 			sadbsecas2str(sa_args.src, sa_args.dst,
 			sa_args.satype, sa_args.spi, sa_args.mode));
+#endif
 	}
 	return 0;
 }
@@ -2712,6 +2718,8 @@ pk_recvspdflush(mhp)
 	return 0;
 }
 
+#ifndef ANDROID_PATCHED
+
 /*
  * send error against acquire message to kenrel.
  */
@@ -2747,6 +2755,15 @@ pk_sendeacquire(iph2)
 
 	return 0;
 }
+
+#else
+
+int pk_sendeacquire(struct ph2handle *iph2)
+{
+	exit(1);
+}
+
+#endif
 
 /*
  * check if the algorithm is supported or not.

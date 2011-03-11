@@ -47,7 +47,9 @@
 #include <errno.h>
 #include <limits.h>
 #include <ctype.h>
+#ifndef ANDROID_CHANGES
 #include <glob.h>
+#endif
 #ifdef HAVE_STDARG_H
 #include <stdarg.h>
 #else
@@ -98,13 +100,17 @@ static struct include_stack {
 	FILE *fp;
 	YY_BUFFER_STATE prevstate;
 	int lineno;
+#ifndef ANDROID_CHANGES
 	glob_t matches;
+#endif
 	int matchon;
 } incstack[MAX_INCLUDE_DEPTH];
 static int incstackp = 0;
 
 static int yy_first_time = 1;
 %}
+
+%option noyywrap
 
 /* common seciton */
 nl		\n
@@ -633,6 +639,7 @@ no		{ YYD; yylval.num = FALSE; return(BOOLEAN); }
 			yy_delete_buffer(YY_CURRENT_BUFFER);
 			incstackp--;
     nextfile:
+#ifndef ANDROID_CHANGES
 			if (incstack[incstackp].matchon <
 			    incstack[incstackp].matches.gl_pathc) {
 				char* filepath = incstack[incstackp].matches.gl_pathv[incstack[incstackp].matchon];
@@ -646,11 +653,15 @@ no		{ YYD; yylval.num = FALSE; return(BOOLEAN); }
 				BEGIN(S_INI);
 			} else {
 				globfree(&incstack[incstackp].matches);
+#else
 				if (incstackp == 0)
 					yyterminate();
 				else
 					yy_switch_to_buffer(incstack[incstackp].prevstate);
+#endif
+#ifndef ANDROID_CHANGES
 			}
+#endif
 		}
 
 	/* ... */
@@ -712,6 +723,19 @@ yycf_switch_buffer(path)
 			"Includes nested too deeply");
 		return -1;
 	}
+#ifdef ANDROID_CHANGES
+	incstack[incstackp].matchon = 0;
+	incstack[incstackp].prevstate = YY_CURRENT_BUFFER;
+
+	incstack[incstackp].matchon++;
+	incstackp++;
+
+	if (yycf_set_buffer(path) != 0) {
+		incstackp;
+		return -1;
+	}
+
+#else
 
 	if (glob(path, GLOB_TILDE, NULL, &incstack[incstackp].matches) != 0 ||
 	    incstack[incstackp].matches.gl_pathc == 0) {
@@ -735,6 +759,7 @@ yycf_switch_buffer(path)
 	      goto nextmatch;
 	}
 
+#endif
 	yy_switch_to_buffer(yy_create_buffer(yyin, YY_BUF_SIZE));
 
 	BEGIN(S_INI);

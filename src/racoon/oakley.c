@@ -1374,6 +1374,7 @@ oakley_validate_auth(iph1)
 			if (error)
 				return ISAKMP_INTERNAL_ERROR;
 			break;
+#ifndef ANDROID_PATCHED
 		case ISAKMP_GETCERT_DNS:
 			if (iph1->rmconf->peerscertfile != NULL) {
 				plog(LLV_ERROR, LOCATION, NULL,
@@ -1395,6 +1396,7 @@ oakley_validate_auth(iph1)
 				return ISAKMP_INTERNAL_ERROR;
 			}
 			break;
+#endif
 		default:
 			plog(LLV_ERROR, LOCATION, NULL,
 				"invalid getcert_mothod: %d\n",

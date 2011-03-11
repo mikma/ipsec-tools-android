@@ -34,6 +34,9 @@
 #ifdef HAVE_LIBPAM
 #include <security/pam_appl.h>
 #endif
+#ifdef ANDROID_CHANGES
+#include <arpa/inet.h>
+#endif
 
 /* 
  * XXX don't forget to update 
