@@ -45,6 +45,8 @@ extern int prsa_cur_lineno;
 
 %}
 
+%option prefix="prsa"
+
 comment		\#.*
 digit		[0-9]
 octet		(([01]?{digit}?{digit})|((2([0-4]{digit}))|(25[0-5])))

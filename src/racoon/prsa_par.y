@@ -127,6 +127,9 @@ prsawrap()
 	return 1;
 } 
 %}
+
+%name-prefix "prsa"
+
 %union {
 	BIGNUM *bn;
 	RSA *rsa;
