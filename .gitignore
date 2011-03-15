@@ -1,8 +1,10 @@
 libs/
 obj/
-policy_parse.c
-policy_token.c
-cfparse.c
-cftoken.c
-prsa_par.c
-prsa_tok.c
+src/libipsec/policy_parse.c
+src/libipsec/policy_token.c
+src/racoon/cfparse.c
+src/racoon/cftoken.c
+src/racoon/prsa_par.c
+src/racoon/prsa_tok.c
+src/setkey/parse.c
+src/setkey/token.c
