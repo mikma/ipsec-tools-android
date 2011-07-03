@@ -574,7 +574,7 @@ int __libipsec_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *__libipsectext;
 #line 1 "policy_token.l"
-/*	$NetBSD: policy_token.l,v 1.6.6.1 2007/08/01 11:52:19 vanhu Exp $	*/
+/*	$NetBSD: policy_token.l,v 1.7 2007/07/18 12:07:50 vanhu Exp $	*/
 /* Id: policy_token.l,v 1.12 2005/05/05 12:32:18 manubsd Exp */
 /*
  * Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.

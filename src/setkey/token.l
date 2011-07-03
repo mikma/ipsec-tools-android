@@ -1,4 +1,4 @@
-/*	$NetBSD: token.l,v 1.11.6.1 2007/08/01 11:52:23 vanhu Exp $	*/
+/*	$NetBSD: token.l,v 1.15 2010/06/04 13:06:03 vanhu Exp $	*/
 
 /*	$KAME: token.l,v 1.44 2003/10/21 07:20:58 itojun Exp $	*/
 
@@ -111,7 +111,9 @@ hostname	{name}(({dot}{name})+{dot}?)?
 
 %s S_PL S_AUTHALG S_ENCALG
 
+%option noinput nounput
 %%
+
 
 add		{ return(ADD); }
 delete		{ return(DELETE); }
@@ -125,6 +127,7 @@ bye		{ return(EXIT); }
 
 	/* for management SPD */
 spdadd		{ return(SPDADD); }
+spdupdate	{ return(SPDUPDATE); }
 spddelete	{ return(SPDDELETE); }
 spddump		{ return(SPDDUMP); }
 spdflush	{ return(SPDFLUSH); }
