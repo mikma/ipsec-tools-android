@@ -36,7 +36,9 @@
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/socket.h>
+#ifndef ANDROID_CHANGES
 #include <sys/signal.h>
+#endif
 #include <sys/stat.h>
 #include <sys/un.h>
 

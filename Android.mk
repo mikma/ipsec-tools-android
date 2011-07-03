@@ -60,6 +60,8 @@ LOCAL_SRC_FILES := \
 	src/racoon/localconf.c \
 	src/racoon/safefile.c \
 	src/racoon/session.c \
+	src/racoon/admin.c \
+	src/racoon/evt.c \
 	src/racoon/privsep.c
 
 LOCAL_C_INCLUDES += \
@@ -72,7 +74,7 @@ LOCAL_C_INCLUDES += \
 
 LOCAL_SHARED_LIBRARIES := libcutils libcrypto libipsec
 
-LOCAL_CFLAGS := -DANDROID_CHANGES -DHAVE_CONFIG_H -DSYSCONFDIR='"/data/local"'
+LOCAL_CFLAGS := -DANDROID_CHANGES -DHAVE_CONFIG_H -DSYSCONFDIR='"/data/local"' -DENABLE_ADMINPORT -DADMINPORTDIR='"/data/local"'
 
 LOCAL_LDFLAGS := -L$(OPENSSL_LIB)
 LOCAL_LDLIBS := -lssl -lcrypto
