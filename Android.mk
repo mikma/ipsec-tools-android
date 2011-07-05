@@ -17,6 +17,41 @@
 ifneq ($(TARGET_SIMULATOR),true)
 
 LOCAL_PATH := $(call my-dir)
+
+#
+# libracoonlib.so
+#
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := \
+	src/racoon/kmpstat.c \
+	src/racoon/vmbuf.c \
+	src/racoon/sockmisc.c \
+	src/racoon/misc.c
+
+LOCAL_C_INCLUDES += \
+	$(NDK_PROJECT_PATH) \
+	$(NDK_PROJECT_PATH)/src/include-glibc \
+	$(LOCAL_PATH) \
+	$(LOCAL_PATH)/src/libipsec \
+	$(OPENSSL_INC)
+
+LOCAL_SHARED_LIBRARIES += libclib libipsec
+
+ifneq ($(TARGET_SIMULATOR),true)
+        LOCAL_SHARED_LIBRARIES += libdl
+endif
+
+LOCAL_CFLAGS := -DANDROID_CHANGES -DHAVE_CONFIG_H
+
+LOCAL_MODULE := libracoonlib
+
+include $(BUILD_SHARED_LIBRARY)
+
+
+#
+# racoon
+#
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
@@ -41,8 +76,6 @@ LOCAL_SRC_FILES := \
 	src/racoon/schedule.c \
 	src/racoon/str2val.c \
 	src/racoon/genlist.c \
-	src/racoon/vmbuf.c \
-	src/racoon/sockmisc.c \
 	src/racoon/nattraversal.c \
 	src/racoon/cfparse.c \
 	src/racoon/cftoken.c \
@@ -52,7 +85,6 @@ LOCAL_SRC_FILES := \
 	src/racoon/rsalist.c \
 	src/racoon/prsa_tok.c \
 	src/racoon/prsa_par.c \
-	src/racoon/misc.c \
 	src/racoon/plog.c \
 	src/racoon/logger.c \
 	src/racoon/main.c \
@@ -72,7 +104,7 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/src/racoon/missing \
 	$(OPENSSL_INC)
 
-LOCAL_SHARED_LIBRARIES := libcutils libcrypto libipsec
+LOCAL_SHARED_LIBRARIES := libcutils libcrypto libipsec libracoonlib
 
 LOCAL_CFLAGS := -DANDROID_CHANGES -DHAVE_CONFIG_H -DSYSCONFDIR='"/tmp"' -DENABLE_ADMINPORT -DADMINPORTDIR='"/tmp"'
 
@@ -80,6 +112,29 @@ LOCAL_LDFLAGS := -L$(OPENSSL_LIB)
 LOCAL_LDLIBS := -lssl -lcrypto
 
 LOCAL_MODULE := racoon
+
+include $(BUILD_EXECUTABLE)
+
+#
+# racoonctl
+#
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := \
+	src/racoon/racoonctl.c
+
+LOCAL_C_INCLUDES += \
+	$(LOCAL_PATH) \
+	$(LOCAL_PATH)/src/include-glibc \
+	$(LOCAL_PATH)/src/libipsec \
+	$(OPENSSL_INC)
+
+
+LOCAL_SHARED_LIBRARIES += libipsec libracoonlib
+
+LOCAL_CFLAGS := -DANDROID_CHANGES -DHAVE_CONFIG_H -DENABLE_ADMINPORT -DADMINPORTDIR='"/tmp"'
+
+LOCAL_MODULE := racoonctl
 
 include $(BUILD_EXECUTABLE)
 

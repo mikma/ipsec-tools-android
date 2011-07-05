@@ -305,7 +305,7 @@ main(ac, av)
 	if (loglevel)
 		racoon_hexdump(combuf, ((struct admin_com *)combuf)->ac_len);
 
-	com_init();
+	com_init(adminsock_path);
 
 	if (com_send(combuf) != 0)
 		goto bad;
@@ -341,7 +341,7 @@ evt_poll(void) {
 
 	while (evt_filter & (EVTF_LOOP|EVTF_PURGE)) {
 		/* handle_recv closes the socket time, so open it each time */
-		com_init();
+		com_init(adminsock_path);
 
 		if (com_send(sendbuf) != 0)
 			errx(1, "Cannot send combuf");
@@ -657,6 +657,7 @@ f_exchangesa(ac, av)
 	if (ac < 1)
 		errx(1, "insufficient arguments");
 
+#ifndef ANDROID_CHANGES
 	/* Optional -u identity */
 	if (strcmp(av[0], "-u") == 0) {
 		if (ac < 2)
@@ -672,6 +673,7 @@ f_exchangesa(ac, av)
 		av += 2;
 		ac -= 2;
 	}
+#endif
 
 	/* need protocol */
 	if (ac < 1)
@@ -1466,6 +1468,7 @@ print_cfg(buf, len)
 				memcpy(&addr4, attr + 1, sizeof(addr4));
 				break;
 
+#ifndef ANDROID_CHANGES
 			case UNITY_BANNER:
 				banner = racoon_malloc(ntohs(attr->lorv) + 1);
 				if (banner == NULL) {
@@ -1475,6 +1478,7 @@ print_cfg(buf, len)
 				memcpy(banner, attr + 1, ntohs(attr->lorv));
 				banner[ntohs(attr->lorv)] = '\0';
 				break;
+#endif
 
 			default:
 				break;
@@ -1491,7 +1495,8 @@ print_cfg(buf, len)
 		printf("Bound to address %s\n", inet_ntoa(addr4));
 	else
 		printf("VPN connexion established\n");
-	
+
+#ifndef ANDROID_CHANGES
 	if (banner) {
 		struct winsize win;
 		int col = 0;
@@ -1508,6 +1513,7 @@ print_cfg(buf, len)
 		printf("\n");
 		racoon_free(banner);
 	}
+#endif
 	
 	if (evt_filter & EVTF_CFG_STOP)
 		evt_filter &= ~EVTF_LOOP;

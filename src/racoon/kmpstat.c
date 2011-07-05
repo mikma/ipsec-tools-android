@@ -96,7 +96,7 @@ static int so;
 u_int32_t loglevel = 0;
 
 int
-com_init()
+com_init(const char *adminsock_path)
 {
 	struct sockaddr_un name;
 

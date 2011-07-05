@@ -44,7 +44,7 @@ extern u_int32_t racoonctl_interface_major;
 
 extern u_int32_t loglevel;
 
-int com_init(void);
+int com_init(const char *adminsock_path);
 int com_send(vchar_t *);
 int com_recv(vchar_t **);
 struct sockaddr *get_sockaddr(int, char *, char *);
