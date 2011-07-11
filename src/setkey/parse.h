@@ -1,24 +1,23 @@
-/* A Bison parser, made by GNU Bison 2.3.  */
+
+/* A Bison parser, made by GNU Bison 2.4.1.  */
 
 /* Skeleton interface for Bison's Yacc-like parsers in C
-
-   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   
+      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
-
-   This program is free software; you can redistribute it and/or modify
+   
+   This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-
+   
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -29,9 +28,10 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-
+   
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
+
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -85,14 +85,15 @@
      STRING = 301,
      ANY = 302,
      SPDADD = 303,
-     SPDDELETE = 304,
-     SPDDUMP = 305,
-     SPDFLUSH = 306,
-     F_POLICY = 307,
-     PL_REQUESTS = 308,
-     F_AIFLAGS = 309,
-     TAGGED = 310,
-     SECURITY_CTX = 311
+     SPDUPDATE = 304,
+     SPDDELETE = 305,
+     SPDDUMP = 306,
+     SPDFLUSH = 307,
+     F_POLICY = 308,
+     PL_REQUESTS = 309,
+     F_AIFLAGS = 310,
+     TAGGED = 311,
+     SECURITY_CTX = 312
    };
 #endif
 /* Tokens.  */
@@ -142,34 +143,41 @@
 #define STRING 301
 #define ANY 302
 #define SPDADD 303
-#define SPDDELETE 304
-#define SPDDUMP 305
-#define SPDFLUSH 306
-#define F_POLICY 307
-#define PL_REQUESTS 308
-#define F_AIFLAGS 309
-#define TAGGED 310
-#define SECURITY_CTX 311
+#define SPDUPDATE 304
+#define SPDDELETE 305
+#define SPDDUMP 306
+#define SPDFLUSH 307
+#define F_POLICY 308
+#define PL_REQUESTS 309
+#define F_AIFLAGS 310
+#define TAGGED 311
+#define SECURITY_CTX 312
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 114 "parse.y"
 {
+
+/* Line 1676 of yacc.c  */
+#line 110 "parse.y"
+
 	int num;
 	unsigned long ulnum;
 	vchar_t val;
 	struct addrinfo *res;
-}
-/* Line 1489 of yacc.c.  */
-#line 168 "parse.h"
-	YYSTYPE;
+
+
+
+/* Line 1676 of yacc.c  */
+#line 175 "parse.h"
+} YYSTYPE;
+# define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
-# define YYSTYPE_IS_TRIVIAL 1
 #endif
 
 extern YYSTYPE yylval;
+
 

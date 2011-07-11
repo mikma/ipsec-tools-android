@@ -1,4 +1,4 @@
-.\"	$NetBSD: setkey.8,v 1.20 2006/10/06 12:02:27 manu Exp $
+.\"	$NetBSD: setkey.8,v 1.26 2010/12/03 14:32:52 tteras Exp $
 .\"
 .\" Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.
 .\" All rights reserved.
@@ -27,7 +27,7 @@
 .\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 .\" SUCH DAMAGE.
 .\"
-.Dd March 19, 2004
+.Dd June 4, 2010
 .Dt SETKEY 8
 .Os
 .\"
@@ -160,98 +160,60 @@ Lines starting with hash signs
 .Pq Sq #
 are treated as comment lines.
 .Bl -tag -width Ds
-.It Xo
-.Li add
-.Op Fl 46n
-.Ar src Ar dst Ar protocol Ar spi
-.Op Ar extensions
-.Ar algorithm ...
-.Li ;
-.Xc
+.It Li add Oo Fl 46n Oc Ar src Ar dst Ar protocol Ar spi \
+Oo Ar extensions Oc Ar algorithm ... Li ;
 Add an SAD entry.
 .Li add
 can fail for multiple reasons, including when the key length does
 not match the specified algorithm.
 .\"
-.It Xo
-.Li get
-.Op Fl 46n
-.Ar src Ar dst Ar protocol Ar spi
-.Li ;
-.Xc
+.It Li get Oo Fl 46n Oc Ar src Ar dst Ar protocol Ar spi Li ;
 Show an SAD entry.
 .\"
-.It Xo
-.Li delete
-.Op Fl 46n
-.Ar src Ar dst Ar protocol Ar spi
-.Li ;
-.Xc
+.It Li delete Oo Fl 46n Oc Ar src Ar dst Ar protocol Ar spi Li ;
 Remove an SAD entry.
 .\"
-.It Xo
-.Li deleteall
-.Op Fl 46n
-.Ar src Ar dst Ar protocol
-.Li ;
-.Xc
+.It Li deleteall Oo Fl 46n Oc Ar src Ar dst Ar protocol Li ;
 Remove all SAD entries that match the specification.
 .\"
-.It Xo
-.Li flush
-.Op Ar protocol
-.Li ;
-.Xc
+.It Li flush Oo Ar protocol Oc Li ;
 Clear all SAD entries matched by the options.
 .Fl F
 on the command line achieves the same functionality.
 .\"
-.It Xo
-.Li dump
-.Op Ar protocol
-.Li ;
-.Xc
+.It Li dump Oo Ar protocol Oc Li ;
 Dumps all SAD entries matched by the options.
 .Fl D
 on the command line achieves the same functionality.
 .\"
-.It Xo
-.Li spdadd
-.Op Fl 46n
-.Ar src_range Ar dst_range Ar upperspec Ar label Ar policy
-.Li ;
-.Xc
+.It Li spdadd Oo Fl 46n Oc Ar src_range Ar dst_range Ar upperspec \
+Ar label Ar policy Li ;
 Add an SPD entry.
 .\"
-.It Xo
-.Li spdadd tagged
-.Ar tag Ar policy
-.Li ;
-.Xc
+.It Li spdadd tagged Ar tag Ar policy Li ;
 Add an SPD entry based on a PF tag.
 .Ar tag
 must be a string surrounded by double quotes.
 .\"
-.It Xo
-.Li spddelete
-.Op Fl 46n
-.Ar src_range Ar dst_range Ar upperspec Fl P Ar direction
-.Li ;
-.Xc
+.It Li spdupdate Oo Fl 46n Oc Ar src_range Ar dst_range Ar upperspec \
+Ar label Ar policy Li ;
+Updates an SPD entry.
+.\"
+.It Li spdupdate tagged Ar tag Ar policy Li ;
+Update an SPD entry based on a PF tag.
+.Ar tag
+must be a string surrounded by double quotes.
+.\"
+.It Li spddelete Oo Fl 46n Oc Ar src_range Ar dst_range Ar upperspec \
+Fl P Ar direction Li ;
 Delete an SPD entry.
 .\"
-.It Xo
-.Li spdflush
-.Li ;
-.Xc
+.It Li spdflush Li ;
 Clear all SPD entries.
 .Fl FP
 on the command line achieves the same functionality.
 .\"
-.It Xo
-.Li spddump
-.Li ;
-.Xc
+.It Li spddump Li ;
 Dumps all SPD entries.
 .Fl DP
 on the command line achieves the same functionality.
@@ -370,16 +332,16 @@ Specify hard/soft life time duration of the SA measured in seconds.
 Specify hard/soft life time duration of the SA measured in bytes transported.
 .\"
 .It Fl ctx Ar doi Ar algorithm Ar context-name
-Specify an access control label. The access control label is interpreted 
-by the LSM (e.g., SELinux). Ultimately, it enables MAC on network 
-communications. 
+Specify an access control label.
+The access control label is interpreted by the LSM (e.g., SELinux).
+Ultimately, it enables MAC on network communications.
 .Bl -tag -width Fl -compact
 .It Ar doi
 The domain of interpretation, which is used by the
-IKE daemon to identify the domain in which negotiation takes place. 
+IKE daemon to identify the domain in which negotiation takes place.
 .It Ar algorithm
 Indicates the LSM for which the label is generated (e.g., SELinux).
-.It Ar context-name 
+.It Ar context-name
 The string representation of the label that is interpreted by the LSM.
 .El
 .El
@@ -391,10 +353,7 @@ The string representation of the label that is interpreted by the LSM.
 Specify an encryption algorithm
 .Ar ealgo
 for ESP.
-.It Xo
-.Fl E Ar ealgo Ar key
-.Fl A Ar aalgo Ar key
-.Xc
+.It Fl E Ar ealgo Ar key Fl A Ar aalgo Ar key
 Specify an encryption algorithm
 .Ar ealgo ,
 as well as a payload authentication algorithm
@@ -471,24 +430,30 @@ as
 or
 .Li icmp6 ,
 .Li ip4 ,
+.Li gre ,
 or
 .Li any .
 .Li any
 stands for
 .Dq any protocol .
 You can also use the protocol number.
-You can specify a type and/or a code of ICMPv6 when the
-upper-layer protocol is ICMPv6.
-The specification can be placed after
-.Li icmp6 .
-A type is separated from a code by single comma.
-A code must always be specified.
+Additional specification can be placed after the protocol name for
+some protocols.
+You can specify a type and/or a code of ICMP or ICMPv6.
+The type is separated from a code by single comma and the code must
+always be specified.
+GRE key can be specified in dotted-quad format or as plain number.
 When a zero is specified, the kernel deals with it as a wildcard.
 Note that the kernel can not distinguish a wildcard from an ICPMv6
 type of zero.
+.Pp
 For example, the following means that the policy doesn't require IPsec
 for any inbound Neighbor Solicitation.
 .Dl spdadd ::/0 ::/0 icmp6 135,0 -P in none ;
+.Pp
+A second example of requiring transport mode encryption of specific
+GRE tunnel:
+.Dl spdadd 0.0.0.0 0.0.0.0 gre 1234 ipsec esp/transport//require ;
 .Pp
 .Em Note :
 .Ar upperspec
@@ -497,17 +462,19 @@ as it requires extra reassembly at the forwarding node
 .Pq not implemented at this moment .
 There are many protocols in
 .Pa /etc/protocols ,
-but all protocols except of TCP, UDP, and ICMP may not be suitable
+but all protocols except of TCP, UDP, GRE, and ICMP may not be suitable
 to use with IPsec.
 You have to consider carefully what to use.
 .\"
 .Pp
 .It Ar label
-.Ar label 
-is the access control label for the policy. This label is interpreted
-by the LSM (e.g., SELinux). Ultimately, it enables MAC on network
-communications. When a policy contains an access control label, SAs
-negotiated with this policy will contain the label. It's format:
+.Ar label
+is the access control label for the policy.
+This label is interpreted by the LSM (e.g., SELinux).
+Ultimately, it enables MAC on network communications.
+When a policy contains an access control label, SAs
+negotiated with this policy will contain the label.
+Its format:
 .Bl -tag -width Fl -compact
 .\"
 .It Fl ctx Ar doi Ar algorithm Ar context-name
@@ -526,13 +493,15 @@ The string representation of the label that is interpreted by the LSM.
 .It Ar policy
 .Ar policy
 is in one of the following three formats:
-.Bd -literal -offset indent
-.It Fl P Ar direction [priority specification] Li discard
-.It Fl P Ar direction [priority specification] Li none
-.It Xo Fl P Ar direction [priority specification] Li ipsec
+.Bl -item -compact
+.It
+.Fl P Ar direction [priority specification] Li discard
+.It
+.Fl P Ar direction [priority specification] Li none
+.It
+.Fl P Ar direction [priority specification] Li ipsec
 .Ar protocol/mode/src-dst/level Op ...
-.Xc
-.Ed
+.El
 .Pp
 You must specify the direction of its policy as
 .Ar direction .
@@ -559,14 +528,10 @@ If the kernel does not support priorities, a warning message will
 be printed the first time a priority specification is used.
 Policy priority takes one of the following formats:
 .Bl -tag  -width "discard"
-.It Xo
-.Ar {priority,prio} offset
-.Xc
+.It Ar {priority,prio} offset
 .Ar offset
 is an integer in the range from \-2147483647 to 214783648.
-.It Xo
-.Ar {priority,prio} base {+,\-} offset
-.Xc
+.It Ar {priority,prio} base {+,\-} offset
 .Ar base
 is either
 .Li low (\-1073741824) ,
@@ -677,7 +642,7 @@ When using ESP over UDP, you can specify port numbers in the endpoint
 addresses to get the correct matching.
 Here is an example:
 .Bd -literal -offset
-spdadd 10.0.11.0/24[any] 10.0.11.33/32[any] any -P out ipsec
+spdadd 10.0.11.0/24[any] 10.0.11.33/32[any] any \-P out ipsec
     esp/tunnel/192.168.0.1[4500]-192.168.1.2[30000]/require ;
 
 .Ed
@@ -813,14 +778,14 @@ The command exits with 0 on success, and non-zero on errors.
 .Sh EXAMPLES
 .Bd -literal -offset
 add 3ffe:501:4819::1 3ffe:501:481d::1 esp 123457
-	-E des-cbc 0x3ffe05014819ffff ;
+	\-E des-cbc 0x3ffe05014819ffff ;
 
-add -6 myhost.example.com yourhost.example.com ah 123456
-	-A hmac-sha1 "AH SA configuration!" ;
+add \-6 myhost.example.com yourhost.example.com ah 123456
+	\-A hmac-sha1 "AH SA configuration!" ;
 
 add 10.0.11.41 10.0.11.33 esp 0x10001
-	-E des-cbc 0x3ffe05014819ffff
-	-A hmac-md5 "authentication!!" ;
+	\-E des-cbc 0x3ffe05014819ffff
+	\-A hmac-md5 "authentication!!" ;
 
 get 3ffe:501:4819::1 3ffe:501:481d::1 ah 123456 ;
 
@@ -829,17 +794,17 @@ flush ;
 dump esp ;
 
 spdadd 10.0.11.41/32[21] 10.0.11.33/32[any] any
-	-P out ipsec esp/tunnel/192.168.0.1-192.168.1.2/require ;
+	\-P out ipsec esp/tunnel/192.168.0.1-192.168.1.2/require ;
 
-add 10.1.10.34 10.1.10.36 tcp 0x1000 -A tcp-md5 "TCP-MD5 BGP secret" ;
+add 10.1.10.34 10.1.10.36 tcp 0x1000 \-A tcp-md5 "TCP-MD5 BGP secret" ;
 
 add 10.0.11.41 10.0.11.33 esp 0x10001
-	-ctx 1 1 "system_u:system_r:unconfined_t:SystemLow-SystemHigh"
-	-E des-cbc 0x3ffe05014819ffff;
+	\-ctx 1 1 "system_u:system_r:unconfined_t:SystemLow-SystemHigh"
+	\-E des-cbc 0x3ffe05014819ffff;
 
 spdadd 10.0.11.41 10.0.11.33 any
-	-ctx 1 1 "system_u:system_r:unconfined_t:SystemLow-SystemHigh"
-	-P out ipsec esp/transport//require ;
+	\-ctx 1 1 "system_u:system_r:unconfined_t:SystemLow-SystemHigh"
+	\-P out ipsec esp/transport//require ;
 .Ed
 .\"
 .Sh SEE ALSO
@@ -848,7 +813,7 @@ spdadd 10.0.11.41 10.0.11.33 any
 .Xr sysctl 8
 .Rs
 .%T "Changed manual key configuration for IPsec"
-.%O "http://www.kame.net/newsletter/19991007/"
+.%U "http://www.kame.net/newsletter/19991007/"
 .%D "October 1999"
 .Re
 .\"

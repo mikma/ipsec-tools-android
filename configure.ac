@@ -2,7 +2,7 @@ dnl -*- mode: m4 -*-
 dnl Id: configure.ac,v 1.77 2006/07/20 19:19:27 manubsd Exp
 
 AC_PREREQ(2.52)
-AC_INIT(ipsec-tools, 0.7.3)
+AC_INIT(ipsec-tools, 0.8.0)
 AC_CONFIG_SRCDIR([configure.ac])
 AM_CONFIG_HEADER(config.h)
 
@@ -242,7 +242,7 @@ AC_CHECK_HEADER(openssl/sha2.h, [], [
 	    CRYPTOBJS="$CRYPTOBJS sha2.o"
 	])
 
-	CPPFLAGS_ADD="$CPPFLAGS_ADD -I./\${top_srcdir}/src/racoon/missing"
+	CPPFLAGS_ADD="$CPPFLAGS_ADD -I\${top_srcdir}/src/racoon/missing"
 ])
 AC_SUBST(CRYPTOBJS)
 
@@ -556,16 +556,6 @@ if test "x$enable_dpd" = "xyes"; then
 fi
 AC_MSG_RESULT($enable_dpd)
 
-AC_MSG_CHECKING(if --enable-fastquit option is specified)
-AC_ARG_ENABLE(fastquit,
-        [  --enable-fastquit            enable new faster code to flush SAs when stopping racoon],
-        [], [enable_fastquit=no])
-if test "x$enable_fastquit" = "xyes"; then
-	AC_DEFINE([ENABLE_FASTQUIT], [], [Enable fast SA flush code])
-fi
-AC_MSG_RESULT($enable_fastquit)
-
-
 AC_MSG_CHECKING(if --enable-samode-unspec option is specified)
 AC_ARG_ENABLE(samode-unspec,
         [  --enable-samode-unspec  enable to use unspecified a mode of SA],
@@ -793,6 +783,16 @@ if test "$enable_security_context" = "yes"; then
 		fi
 	fi
 fi
+
+RACOON_PATH_LIBS([clock_gettime], [rt])
+
+AC_MSG_CHECKING(for monotonic system clock)
+AC_TRY_COMPILE(
+	[#include <time.h>],
+	[clock_gettime(CLOCK_MONOTONIC, NULL);],
+	[AC_DEFINE([HAVE_CLOCK_MONOTONIC], [], [Have a monotonic clock])
+	 AC_MSG_RESULT(yes)],
+	[AC_MSG_RESULT(no)])
 
 CFLAGS="$CFLAGS $CFLAGS_ADD"
 CPPFLAGS="$CPPFLAGS $CPPFLAGS_ADD"
