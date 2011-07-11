@@ -27,3 +27,5 @@
 #define RETSIGTYPE void
 #define strtouq strtoul
 #define MAXNS 3
+
+#define HAVE_CLOCK_MONOTONIC

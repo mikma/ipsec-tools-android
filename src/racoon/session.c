@@ -40,6 +40,9 @@
 #if HAVE_SYS_WAIT_H
 # include <sys/wait.h>
 #endif
+#ifdef ANDROID_PATCHED
+# include <linux/wait.h>
+#endif
 #ifndef WEXITSTATUS
 # define WEXITSTATUS(s)	((unsigned)(s) >> 8)
 #endif
