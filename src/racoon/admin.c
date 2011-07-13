@@ -120,11 +120,11 @@ admin_handler(ctx, fd)
 	close_on_exec(so2);
 
 	/* get buffer length */
-	while ((len = recv(so2, (char *)&com, sizeof(com), MSG_PEEK)) < 0) {
+	while ((len = recv(so2, (char *)&com, sizeof(com), 0)) < 0) {
 		if (errno == EINTR)
 			continue;
 		plog(LLV_ERROR, LOCATION, NULL,
-			"failed to recv admin command: %s\n",
+			"failed to recv admin command length: %s\n",
 			strerror(errno));
 		goto end;
 	}
@@ -143,14 +143,20 @@ admin_handler(ctx, fd)
 		goto end;
 	}
 
-	/* get real data */
-	while ((len = recv(so2, combuf, com.ac_len, 0)) < 0) {
-		if (errno == EINTR)
-			continue;
-		plog(LLV_ERROR, LOCATION, NULL,
-			"failed to recv admin command: %s\n",
-			strerror(errno));
-		goto end;
+        /* copy header */
+        memcpy(combuf, &com, sizeof(com));
+
+        if (com.ac_len > sizeof(com)) {
+                /* get real data */
+                while ((len = recv(so2, combuf + sizeof(com),
+                                   com.ac_len - sizeof(com), 0)) < 0) {
+                        if (errno == EINTR)
+                                continue;
+                        plog(LLV_ERROR, LOCATION, NULL,
+                             "failed to recv admin command data: %s\n",
+                             strerror(errno));
+                        goto end;
+                }
 	}
 
 	error = admin_process(so2, combuf);
