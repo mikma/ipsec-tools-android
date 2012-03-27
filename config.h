@@ -10,8 +10,10 @@
 #define WITH_SHA2
 #define HAVE_SHA2_IN_SHA_H
 
-#undef INET6
-#undef INET6_ADVAPI
+#define INET6
+#define INET6_ADVAPI
+
+#undef IPV6_RECVPKTINFO
 
 #define PATH_IPSEC_H <netinet/ipsec.h>
 #define HAVE_POLICY_FWD

@@ -77,6 +77,16 @@
 #define SETSOCKOPT privsep_setsockopt
 #endif
 
+#ifdef ANDROID_CHANGES
+
+struct in6_pktinfo
+  {
+    struct in6_addr ipi6_addr;  /* src/dst IPv6 address */
+    unsigned int ipi6_ifindex;  /* send/recv interface index */
+  };
+
+#endif /* ANDROID_CHANGES */
+
 const int niflags = 0;
 
 /*
