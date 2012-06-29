@@ -3601,6 +3601,8 @@ pk_sendeacquire(iph2)
 
 int pk_sendeacquire(struct ph2handle *iph2)
 {
+        /* FIXME use abort or return -1. */
+        fprintf(stderr, "pk_sendeacquire\n");
 	exit(1);
 }
 

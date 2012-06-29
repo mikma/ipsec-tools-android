@@ -166,6 +166,8 @@ end:
 		plog(LLV_DEBUG, LOCATION, NULL,
 			"[%d] admin connection established\n", so2);
 	} else {
+		plog(LLV_DEBUG, LOCATION, NULL,
+			"[%d] admin socket closed\n", so2);
 		(void)close(so2);
 	}
 
